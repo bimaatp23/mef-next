@@ -1,3 +1,22 @@
 body {
+  background: #18181b;
+  color: #edfffb;
   margin: 0;
+  overflow-y: auto;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #18181b;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #00695c;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #004d40;
 }
