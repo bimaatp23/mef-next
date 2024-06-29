@@ -8,7 +8,6 @@ import { NextRequest, NextResponse } from 'next/server'
 export async function GET(request: NextRequest) {
     const query = request.nextUrl.searchParams
     const code: string = query.get('code') || ''
-    const search: string = query.get('search') || ''
     try {
         if (code) {
             if (code === '0') {
@@ -42,7 +41,7 @@ export async function GET(request: NextRequest) {
                 return NextResponse.json(result)
             }
         } else {
-            const members = await fetchSql(`SELECT ${member.general} FROM members WHERE LOWER(name) LIKE LOWER('%${search}%') ORDER BY name ASC`)
+            const members = await fetchSql(`SELECT ${member.general} FROM members ORDER BY name ASC`)
             const result: BaseResp = {
                 status: 200,
                 message: 'OK',
