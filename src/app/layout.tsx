@@ -1,4 +1,3 @@
-import { Box, colors } from '@mui/material'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
@@ -17,11 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body className={inter.className}>
-        <Box sx={{ background: colors.teal[900], height: '100vh' }}>
-          {children}
-        </Box>
-      </body>
+      <body className={inter.className}>{children}</body>
     </html>
   )
 }
