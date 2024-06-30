@@ -11,13 +11,13 @@ export async function GET(request: NextRequest) {
     try {
         if (code) {
             if (code === '0') {
-                const self = await fetchSql(`SELECT ${member.detail} FROM members WHERE code = '${code}'`)
+                const selfs = await fetchSql(`SELECT ${member.detail} FROM members WHERE code = '${code}'`)
                 const child = await fetchSql(`SELECT ${member.general} FROM members WHERE status = 'Biological' AND code LIKE '%' AND code NOT LIKE '0' AND code NOT LIKE '%.%' ORDER BY code ASC`)
                 const result: DetailResp = {
                     status: 200,
                     message: 'OK',
                     data: {
-                        self: self.rows as DetailPerson[],
+                        selfs: selfs.rows as DetailPerson[],
                         parents: [],
                         childs: child.rows as Person[]
                     }
@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
                     status: 200,
                     message: 'OK',
                     data: {
-                        self: self.rows as DetailPerson[],
+                        selfs: self.rows as DetailPerson[],
                         parents: parent.rows as DetailPerson[],
                         childs: child.rows as Person[]
                     }

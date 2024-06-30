@@ -71,7 +71,7 @@ export default function Home() {
         <IconButton>
           <Menu
             sx={{
-              color: colors[50]
+              color: 'transparent'
             }}
           />
         </IconButton>
@@ -102,8 +102,8 @@ export default function Home() {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       /> : <Fragment></Fragment>}
-      {isLoading ? <Loading /> : 
-        <Box sx={{ pb: 2 }}>
+      {isLoading ? <Loading /> :
+        <Box pb={0.5}>
           {displayMembers.map((member) => <PersonBox member={member} key={member.code.concat(member.name)} />)}
         </Box>
       }
