@@ -81,7 +81,7 @@ export default function Home() {
         >
           <Search
             sx={{
-              color: colors[50]
+              color: colors.green[50]
             }}
           />
         </IconButton>
@@ -91,10 +91,10 @@ export default function Home() {
         sx={{
           mb: 2,
           border: 2,
-          borderColor: colors[400],
+          borderColor: colors.green[400],
           borderRadius: 2,
           '& .MuiInputBase-input': {
-            color: colors[50]
+            color: colors.green[50]
           }
         }}
         size='small'

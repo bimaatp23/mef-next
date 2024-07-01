@@ -1,5 +1,5 @@
 import { DetailPerson } from '@/types/Person'
-import { colors } from '@/utils/colors'
+import { Color, colors } from '@/utils/colors'
 import { WhatsApp } from '@mui/icons-material'
 import { Box, Button, Typography } from '@mui/material'
 import moment from 'moment'
@@ -18,9 +18,11 @@ export default function DetailBox(props: Props) {
         anchor.click()
     }
 
-    return <Box sx={{ background: colors[400], borderRadius: 2, overflow: 'hidden', pl: 1, mb: 2 }}>
-        <Box sx={{ background: colors[950], display: 'flex', gap: 2, flexDirection: 'column', alignItems: 'center', height: 'fit-content', px: 1, py: 2 }}>
-            <Box sx={{ width: '150px', height: '150px', borderRadius: '100%', border: 2, borderColor: colors[400] }}>
+    const activeColors: Color = props.detail.status === 'Biological' ? colors.green : colors.blue
+
+    return <Box sx={{ background: activeColors[400], borderRadius: 2, overflow: 'hidden', pl: 1, mb: 2 }}>
+        <Box sx={{ background: activeColors[950], display: 'flex', gap: 2, flexDirection: 'column', alignItems: 'center', height: 'fit-content', px: 1, py: 2 }}>
+            <Box sx={{ width: '150px', height: '150px', borderRadius: '100%', border: 2, borderColor: activeColors[400] }}>
                 <Image src='/assets/profile.png' alt='Profile Image' width={150} height={150} />
             </Box>
             <Box sx={{ width: '100%' }}>

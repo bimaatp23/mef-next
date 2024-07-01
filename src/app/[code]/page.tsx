@@ -58,7 +58,7 @@ export default function Detail({ params }: { params: Params }) {
                 <IconButton onClick={() => router.back()}>
                     <ArrowBack
                         sx={{
-                            color: colors[50]
+                            color: colors.green[50]
                         }}
                     />
                 </IconButton>

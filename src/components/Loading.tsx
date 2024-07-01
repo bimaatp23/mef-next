@@ -10,7 +10,7 @@ export default function Loading() {
     >
         <CircularProgress
             sx={{
-                color: colors[400]
+                color: colors.green[400]
             }}
         />
     </Box>

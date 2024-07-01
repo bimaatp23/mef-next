@@ -1,4 +1,4 @@
 export const member = {
-    general: 'code, name',
+    general: 'code, name, status',
     detail: 'code, name, dob, dod, gender, address, phone, status'
 }
