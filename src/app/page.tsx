@@ -21,9 +21,11 @@ export default function Home() {
 
   useEffect(() => {
     if (isSearch) {
-      getSearchMembers(search)
+      setDisplayMembers(members.filter(member => member.name.toLowerCase().includes(search.toLowerCase())))
+    } else {
+      setDisplayMembers(members.filter(member => (['1', '2', '3', '4', '5', '6', '7', '8'].includes(member.code)) && member.status === 'Biological').sort((a: Person, b: Person) => a.code.localeCompare(b.code)))
     }
-  }, [search, isSearch])
+  }, [members, search, isSearch])
 
   const getMembers = async () => {
     setIsLoading(true)
@@ -31,19 +33,10 @@ export default function Home() {
       .then(response => response.json())
       .then(json => {
         setMembers(json.data as Person[])
-        setDisplayMembers(json.data as Person[])
       })
       .finally(() => {
         setIsLoading(false)
       })
-  }
-
-  const getSearchMembers = (keyword: string) => {
-    if (keyword) {
-      setDisplayMembers(members.filter(member => member.name.toLowerCase().includes(keyword.toLowerCase())))
-    } else {
-      setDisplayMembers([])
-    }
   }
 
   const toggleSearch = () => {

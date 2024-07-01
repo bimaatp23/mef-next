@@ -22,6 +22,7 @@ export default function RootLayout({
         <Box
           sx={{
             width: '100vw',
+            height: '100vh',
             maxWidth: '500px',
             background: '#18181b',
             color: colors.green[50],
