@@ -1,3 +1,5 @@
+import { colors } from '@/utils/colors'
+import { Box } from '@mui/material'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
@@ -16,7 +18,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <Box
+          sx={{
+            width: '100vw',
+            maxWidth: '500px',
+            background: '#18181b',
+            color: colors.green[50],
+            overflowY: 'auto'
+          }}
+        >
+          {children}
+        </Box>
+      </body>
     </html>
   )
 }
