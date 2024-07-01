@@ -9,97 +9,90 @@ import { Box, IconButton, TextField, Typography } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
 
 export default function Home() {
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [isSearch, setIsSearch] = useState<boolean>(false)
-  const [members, setMembers] = useState<Person[]>([])
-  const [displayMembers, setDisplayMembers] = useState<Person[]>([])
-  const [search, setSearch] = useState<string>('')
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [isSearch, setIsSearch] = useState<boolean>(false)
+    const [members, setMembers] = useState<Person[]>([])
+    const [displayMembers, setDisplayMembers] = useState<Person[]>([])
+    const [search, setSearch] = useState<string>('')
 
-  useEffect(() => {
-    getMembers()
-  }, [])
+    useEffect(() => {
+        getMembers()
+    }, [])
 
-  useEffect(() => {
-    if (isSearch) {
-      setDisplayMembers(members.filter(member => member.name.toLowerCase().includes(search.toLowerCase())))
-    } else {
-      setDisplayMembers(members.filter(member => (['1', '2', '3', '4', '5', '6', '7', '8'].includes(member.code)) && member.status === 'Biological').sort((a: Person, b: Person) => a.code.localeCompare(b.code)))
+    useEffect(() => {
+        if (isSearch) {
+            setDisplayMembers(members.filter(member => member.name.toLowerCase().includes(search.toLowerCase())))
+        } else {
+            setDisplayMembers(members.filter(member => (['1', '2', '3', '4', '5', '6', '7', '8'].includes(member.code)) && member.status === 'Biological').sort((a: Person, b: Person) => a.code.localeCompare(b.code)))
+        }
+    }, [members, search, isSearch])
+
+    const getMembers = async () => {
+        setIsLoading(true)
+        await fetch('/api')
+            .then(response => response.json())
+            .then(json => {
+                setMembers(json.data as Person[])
+            })
+            .finally(() => {
+                setIsLoading(false)
+            })
     }
-  }, [members, search, isSearch])
 
-  const getMembers = async () => {
-    setIsLoading(true)
-    await fetch('/api')
-      .then(response => response.json())
-      .then(json => {
-        setMembers(json.data as Person[])
-      })
-      .finally(() => {
-        setIsLoading(false)
-      })
-  }
-
-  const toggleSearch = () => {
-    if (isSearch) {
-      setDisplayMembers(members)
+    const toggleSearch = () => {
+        if (isSearch) {
+            setDisplayMembers(members)
+        }
+        setIsSearch(!isSearch)
     }
-    setIsSearch(!isSearch)
-  }
 
-  return <Fragment>
-    <Box
-      sx={{
-        height: '100vh',
-        m: 2
-      }}
-    >
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          mb: 2
-        }}
-      >
-        <IconButton>
-          <Menu
+    return <Fragment>
+        <Box
             sx={{
-              color: 'transparent'
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                mb: 2
             }}
-          />
-        </IconButton>
-        <Typography fontWeight='bold' fontSize={25} align='center'>Moch Edris Families</Typography>
-        <IconButton
-          onClick={() => toggleSearch()}
         >
-          <Search
-            sx={{
-              color: colors.green[50]
-            }}
-          />
-        </IconButton>
-      </Box>
-      {isSearch ? <TextField
-        fullWidth
-        sx={{
-          mb: 2,
-          border: 2,
-          borderColor: colors.green[400],
-          borderRadius: 2,
-          '& .MuiInputBase-input': {
-            color: colors.green[50]
-          }
-        }}
-        size='small'
-        placeholder='Cari ...'
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      /> : <Fragment></Fragment>}
-      {isLoading ? <Loading /> :
-        <Box pb={0.5}>
-          {displayMembers.map((member) => <PersonBox member={member} key={member.code.concat(member.name)} />)}
+            <IconButton>
+                <Menu
+                    sx={{
+                        color: 'transparent'
+                    }}
+                />
+            </IconButton>
+            <Typography fontWeight='bold' fontSize={25} align='center'>Moch Edris Families</Typography>
+            <IconButton
+                onClick={() => toggleSearch()}
+            >
+                <Search
+                    sx={{
+                        color: colors.green[50]
+                    }}
+                />
+            </IconButton>
         </Box>
-      }
-    </Box>
-  </Fragment>
+        {isSearch ? <TextField
+            fullWidth
+            sx={{
+                mb: 2,
+                border: 2,
+                borderColor: colors.green[400],
+                borderRadius: 2,
+                '& .MuiInputBase-input': {
+                    color: colors.green[50]
+                }
+            }}
+            size='small'
+            placeholder='Cari ...'
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+        /> : <Fragment></Fragment>}
+        {isLoading ? <Loading /> :
+            <Box pb={0.5}>
+                {displayMembers.map((member) => <PersonBox member={member} key={member.code.concat(member.name)} />)}
+            </Box>
+        }
+    </Fragment>
 }

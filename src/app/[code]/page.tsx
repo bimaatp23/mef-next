@@ -43,53 +43,46 @@ export default function Detail({ params }: { params: Params }) {
     return <Fragment>
         <Box
             sx={{
-                height: '100vh',
-                m: 2
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                mb: 2
             }}
         >
-            <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    mb: 2
-                }}
-            >
-                <IconButton onClick={() => router.back()}>
-                    <ArrowBack
-                        sx={{
-                            color: colors.green[50]
-                        }}
-                    />
-                </IconButton>
-                <Typography fontWeight='bold' fontSize={25} align='center'>Moch Edris Families</Typography>
-                <IconButton>
-                    <Menu
-                        sx={{
-                            color: 'transparent'
-                        }}
-                    />
-                </IconButton>
-            </Box>
-            <Box pb={0.5}>
-                {selfs.map((self) => <DetailBox detail={self} key={self.code.concat(self.name)} />)}
-            </Box>
-            {isLoading ? <Loading /> :
-                <Fragment>
-                    {parents.length ? <Fragment>
-                        <Typography fontWeight='bold' mb={1}>Orang Tua</Typography>
-                        <Box pb={0.5}>
-                            {parents.map((parent) => <PersonBox member={parent} key={parent.code.concat(parent.name)} />)}
-                        </Box>
-                    </Fragment> : <Fragment></Fragment>}
-                    {childs.length ? <Fragment>
-                        <Typography fontWeight='bold' mb={1}>Anak</Typography>
-                        <Box pb={0.5}>
-                            {childs.map((child) => <PersonBox member={child} key={child.code.concat(child.name)} />)}
-                        </Box>
-                    </Fragment> : <Fragment></Fragment>}
-                </Fragment>
-            }
+            <IconButton onClick={() => router.back()}>
+                <ArrowBack
+                    sx={{
+                        color: colors.green[50]
+                    }}
+                />
+            </IconButton>
+            <Typography fontWeight='bold' fontSize={25} align='center'>Moch Edris Families</Typography>
+            <IconButton>
+                <Menu
+                    sx={{
+                        color: 'transparent'
+                    }}
+                />
+            </IconButton>
         </Box>
+        {isLoading ? <Loading /> :
+            <Box pb={0.5}>
+                <Box pb={0.5}>
+                    {selfs.map((self) => <DetailBox detail={self} key={self.code.concat(self.name)} />)}
+                </Box>
+                {parents.length ? <Fragment>
+                    <Typography fontWeight='bold' mb={1}>Orang Tua</Typography>
+                    <Box pb={0.5}>
+                        {parents.map((parent) => <PersonBox member={parent} key={parent.code.concat(parent.name)} />)}
+                    </Box>
+                </Fragment> : <Fragment></Fragment>}
+                {childs.length ? <Fragment>
+                    <Typography fontWeight='bold' mb={1}>Anak</Typography>
+                    <Box pb={0.5}>
+                        {childs.map((child) => <PersonBox member={child} key={child.code.concat(child.name)} />)}
+                    </Box>
+                </Fragment> : <Fragment></Fragment>}
+            </Box>
+        }
     </Fragment>
 }

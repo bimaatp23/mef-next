@@ -22,7 +22,7 @@ export default function DetailBox(props: Props) {
 
     return <Box sx={{ background: activeColors[400], borderRadius: 2, overflow: 'hidden', pl: 1, mb: 2 }}>
         <Box sx={{ background: activeColors[950], display: 'flex', gap: 2, flexDirection: 'column', alignItems: 'center', height: 'fit-content', px: 1, py: 2 }}>
-            <Box sx={{ width: '150px', height: '150px', borderRadius: '100%', border: 2, borderColor: activeColors[400] }}>
+            <Box sx={{ width: '150px', height: '150px', borderRadius: '100%', border: 2, borderColor: activeColors[400], overflow: 'hidden' }}>
                 <Image src='/assets/profile.png' alt='Profile Image' width={150} height={150} />
             </Box>
             <Box sx={{ width: '100%' }}>

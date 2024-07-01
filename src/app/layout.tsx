@@ -26,10 +26,18 @@ export default function RootLayout({
             maxWidth: '500px',
             background: '#18181b',
             color: colors.green[50],
-            overflowY: 'auto'
+            overflowY: 'auto',
           }}
         >
-          {children}
+          <Box
+            sx={{
+              height: 'fit-content',
+              p: 2,
+              pb: 8
+            }}
+          >
+            {children}
+          </Box>
         </Box>
       </body>
     </html>
