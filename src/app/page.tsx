@@ -91,7 +91,7 @@ export default function Home() {
         /> : <Fragment></Fragment>}
         {isLoading ? <Loading /> :
             <Box pb={0.5}>
-                {displayMembers.map((member) => <PersonBox member={member} key={member.code.concat(member.name)} />)}
+                {displayMembers.map((member) => <PersonBox member={member} key={member.id} />)}
             </Box>
         }
     </Fragment>

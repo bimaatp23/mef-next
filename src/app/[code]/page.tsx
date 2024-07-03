@@ -40,6 +40,21 @@ export default function Detail({ params }: { params: Params }) {
             })
     }
 
+    const updateBio = async (newBio: DetailPerson) => {
+        setIsLoading(true)
+        await fetch(`/api?id=${newBio.id}`, {
+            method: 'PUT',
+            body: JSON.stringify(newBio)
+        })
+            .then(response => response.json())
+            .then(json => {
+                if (json.status === 200) getDetail()
+            })
+            .finally(() => {
+                setIsLoading(false)
+            })
+    }
+
     return <Fragment>
         <Box
             sx={{
@@ -68,18 +83,18 @@ export default function Detail({ params }: { params: Params }) {
         {isLoading ? <Loading /> :
             <Box pb={0.5}>
                 <Box pb={0.5}>
-                    {selfs.map((self) => <DetailBox detail={self} key={self.code.concat(self.name)} />)}
+                    {selfs.map((self) => <DetailBox detail={self} updateBio={updateBio} key={self.id} />)}
                 </Box>
                 {parents.length ? <Fragment>
                     <Typography fontWeight='bold' mb={1}>Orang Tua</Typography>
                     <Box pb={0.5}>
-                        {parents.map((parent) => <PersonBox member={parent} key={parent.code.concat(parent.name)} />)}
+                        {parents.map((parent) => <PersonBox member={parent} key={parent.id} />)}
                     </Box>
                 </Fragment> : <Fragment></Fragment>}
                 {childs.length ? <Fragment>
                     <Typography fontWeight='bold' mb={1}>Anak</Typography>
                     <Box pb={0.5}>
-                        {childs.map((child) => <PersonBox member={child} key={child.code.concat(child.name)} />)}
+                        {childs.map((child) => <PersonBox member={child} key={child.id} />)}
                     </Box>
                 </Fragment> : <Fragment></Fragment>}
             </Box>
