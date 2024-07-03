@@ -4,7 +4,7 @@ import { Edit, WhatsApp } from '@mui/icons-material'
 import { Box, Button, Checkbox, FormControl, FormControlLabel, IconButton, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
 import moment from 'moment'
 import Image from 'next/image'
-import { ChangeEvent, Fragment, useState } from 'react'
+import { ChangeEvent, Fragment, useEffect, useState } from 'react'
 import CustomModal from './CustomModal'
 
 interface Props {
@@ -17,6 +17,10 @@ export default function DetailBox(props: Props) {
     const [editOpen, setEditOpen] = useState<boolean>(false)
     const [editBio, setEditBio] = useState<DetailPerson>(props.detail)
     const [isDie, setIsDie] = useState<boolean>(!!props.detail.dod)
+
+    useEffect(() => {
+        setEditBio(props.detail)
+    }, [props.detail])
 
     const openWhatsApp = (phone: string) => {
         const anchor = document.createElement('a')
