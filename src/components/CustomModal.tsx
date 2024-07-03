@@ -21,6 +21,7 @@ export default function CustomModal(props: Props) {
                 left: '50%',
                 transform: 'translate(-50%, -50%)',
                 width: '85vw',
+                maxWidth: '430px',
                 background: 'white',
                 border: 2,
                 boxShadow: 24,
