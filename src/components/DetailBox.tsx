@@ -110,7 +110,7 @@ export default function DetailBox(props: Props) {
             {isDie ? <TextField
                 fullWidth
                 sx={{
-                    mb: 2,
+                    mb: 1,
                 }}
                 size='small'
                 label='Tanggal Meninggal'
@@ -119,7 +119,7 @@ export default function DetailBox(props: Props) {
                 onChange={onEditChange}
                 type='date'
             /> : <Fragment></Fragment>}
-            <Typography color='grey' fontSize={12} mb={1}>* wajib diisi</Typography>
+            <Typography color='grey' fontSize={15} mb={1}>* wajib diisi</Typography>
             <Button
                 variant='contained'
                 color='success'
