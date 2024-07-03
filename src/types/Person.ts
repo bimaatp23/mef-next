@@ -1,4 +1,5 @@
 export interface Person {
+    id: number
     code: string
     name: string
     status: 'Biological' | 'Married-in'
