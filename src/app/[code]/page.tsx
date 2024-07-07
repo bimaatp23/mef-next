@@ -35,10 +35,32 @@ export default function Detail({ params }: { params: Params }) {
         status: 'Married-in'
     })
     const [isCoupleDie, setIsCoupleDie] = useState<boolean>(false)
+    const [childOpen, setChildOpen] = useState<boolean>(false)
+    const arrayChildNumber = (): string[] => {
+        const usedNumber: string[] = childs.map((child) => child.code.split('.').reverse()[0])
+        return ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'].filter((num) => !usedNumber.includes(num))
+    }
+    const [childNumber, setChildNumber] = useState<string>('')
+    const [childBio, setChildBio] = useState<DetailPerson>({
+        id: 0,
+        code: '',
+        name: '',
+        dob: '2000-01-01',
+        dod: null,
+        gender: 'Male',
+        address: '',
+        phone: '',
+        status: 'Biological'
+    })
+    const [isChildDie, setIsChildDie] = useState<boolean>(false)
 
     useEffect(() => {
         getDetail()
     }, [])
+
+    useEffect(() => {
+        if (childs) setChildNumber(arrayChildNumber()[0])
+    }, [childs])
 
     const getDetail = async () => {
         setIsLoading(true)
@@ -78,6 +100,40 @@ export default function Detail({ params }: { params: Params }) {
             .then(response => response.json())
             .then(json => {
                 if (json.status === 200) getDetail()
+            })
+            .finally(() => {
+                setIsLoading(false)
+            })
+    }
+
+    const doAddChild = async (newBio: DetailPerson) => {
+        setIsLoading(true)
+        const detail: DetailPerson = {
+            ...newBio,
+            code: params.code + '.' + childNumber
+        }
+        await fetch('/api', {
+            method: 'POST',
+            body: JSON.stringify(detail)
+        })
+            .then(response => response.json())
+            .then(json => {
+                if (json.status === 200) {
+                    setChildBio({
+                        id: 0,
+                        code: '',
+                        name: '',
+                        dob: '2000-01-01',
+                        dod: null,
+                        gender: 'Male',
+                        address: '',
+                        phone: '',
+                        status: 'Biological'
+                    })
+                    setChildNumber('')
+                    setIsChildDie(false)
+                    getDetail()
+                }
             })
             .finally(() => {
                 setIsLoading(false)
@@ -193,6 +249,129 @@ export default function Detail({ params }: { params: Params }) {
         </CustomModal>
     }
 
+    const onChildChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setChildBio({
+            ...childBio,
+            [e.target.id]: e.target.value
+        })
+    }
+
+    const addChild = () => {
+        return <CustomModal
+            open={childOpen}
+            onClose={() => setChildOpen(false)}
+        >
+            <Typography align='center' fontSize={20} mb={2}>Tambah Anak</Typography>
+            <TextField
+                fullWidth
+                sx={{
+                    mb: 2,
+                }}
+                size='small'
+                label='Nama *'
+                id='name'
+                value={childBio.name}
+                onChange={onChildChange}
+            />
+            <FormControl fullWidth sx={{ mb: 2 }}>
+                <InputLabel id='child-number-label' size='small'>Anak Ke - *</InputLabel>
+                <Select
+                    size='small'
+                    labelId='child-number-label'
+                    value={childNumber}
+                    label='Anak Ke - *'
+                    onChange={(e) => setChildNumber(e.target.value)}
+                >
+                    {arrayChildNumber().map((num) => {
+                        return <MenuItem value={num} key={num}>{num}</MenuItem>
+                    })}
+                </Select>
+            </FormControl>
+            <TextField
+                fullWidth
+                sx={{
+                    mb: 2,
+                }}
+                size='small'
+                label='Tanggal Lahir *'
+                id='dob'
+                value={childBio.dob}
+                onChange={onChildChange}
+                type='date'
+            />
+            <FormControl fullWidth sx={{ mb: 2 }}>
+                <InputLabel id='gender-label' size='small'>Gender *</InputLabel>
+                <Select
+                    size='small'
+                    labelId='gender-label'
+                    value={childBio.gender}
+                    label='Gender *'
+                    onChange={(e) => setChildBio({
+                        ...childBio,
+                        gender: e.target.value as any
+                    })}
+                >
+                    <MenuItem value='Male'>Pria</MenuItem>
+                    <MenuItem value='Female'>Wanita</MenuItem>
+                </Select>
+            </FormControl>
+            <TextField
+                fullWidth
+                sx={{
+                    mb: 2,
+                }}
+                size='small'
+                label='Alamat *'
+                id='address'
+                value={childBio.address}
+                onChange={onChildChange}
+            />
+            <TextField
+                fullWidth
+                size='small'
+                label='No Telepon'
+                id='phone'
+                placeholder='Contoh : 62xxxxxxxxxxx'
+                value={childBio.phone}
+                onChange={onChildChange}
+            />
+            <FormControlLabel
+                control={<Checkbox checked={isChildDie} onChange={(e) => {
+                    setChildBio({
+                        ...childBio,
+                        dod: e.target.checked ? '2000-01-01' : null
+                    })
+                    setIsChildDie(e.target.checked)
+                }} />}
+                label={<Typography color='grey' fontSize={15}>sudah meninggal?</Typography>}
+            />
+            {isChildDie ? <TextField
+                fullWidth
+                sx={{
+                    mb: 1,
+                }}
+                size='small'
+                label='Tanggal Meninggal'
+                id='dod'
+                value={childBio.dod}
+                onChange={onChildChange}
+                type='date'
+            /> : <Fragment></Fragment>}
+            <Typography color='grey' fontSize={15} mb={1}>* wajib diisi</Typography>
+            <Button
+                variant='contained'
+                color='success'
+                fullWidth
+                onClick={() => {
+                    setChildOpen(false)
+                    doAddChild(childBio)
+                }}
+            >
+                Simpan
+            </Button>
+        </CustomModal>
+    }
+
     return <Fragment>
         <Box
             sx={{
@@ -250,8 +429,25 @@ export default function Detail({ params }: { params: Params }) {
                         {parents.map((parent) => <PersonBox member={parent} key={parent.id} />)}
                     </Box>
                 </Fragment> : <Fragment></Fragment>}
-                {childs.length ? <Fragment>
-                    <Typography fontWeight='bold' mb={1}>Anak</Typography>
+                {selfs.length === 2 || childs.length ? <Fragment>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center'
+                        }}
+                    >
+                        <Typography fontWeight='bold' mb={1}>Anak</Typography>
+                        <IconButton>
+                            <Add
+                                sx={{
+                                    color: (params.code.startsWith('0') ? colors.softGreen : colors.softBlue)[600]
+                                }}
+                                onClick={() => setChildOpen(true)}
+                            />
+                        </IconButton>
+                    </Box>
+                    {addChild()}
                     <Box pb={0.5}>
                         {childs.map((child) => <PersonBox member={child} key={child.id} />)}
                     </Box>
