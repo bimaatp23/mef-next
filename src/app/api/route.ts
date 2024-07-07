@@ -56,6 +56,25 @@ export async function GET(request: NextRequest) {
     }
 }
 
+export async function POST(request: NextRequest) {
+    const newBio: DetailPerson = await request.json()
+    try {
+        await fetchSql(`INSERT INTO members VALUES (NULL, '${newBio.code}', '${newBio.name}', '${newBio.dob}', ${newBio.dod ? `'${newBio.dod}'` : 'NULL'}, '${newBio.gender}', '${newBio.address}', ${newBio.phone ? `'${newBio.phone.trim()}'` : 'NULL'}, '${newBio.status}')`)
+        const result: BaseResp = {
+            status: 200,
+            message: 'OK'
+        }
+        return NextResponse.json(result)
+    } catch (err) {
+        console.error('Error:', err)
+        const error: BaseResp = {
+            status: 500,
+            message: 'Internal Server Error'
+        }
+        return NextResponse.json(error, { status: 500 })
+    }
+}
+
 export async function PUT(request: NextRequest) {
     const query = request.nextUrl.searchParams
     const newBio: DetailPerson = await request.json()
