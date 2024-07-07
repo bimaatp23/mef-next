@@ -23,7 +23,7 @@ export default function Home() {
         if (isSearch) {
             setDisplayMembers(members.filter(member => member.name.toLowerCase().includes(search.toLowerCase())))
         } else {
-            setDisplayMembers(members.filter(member => (['1', '2', '3', '4', '5', '6', '7', '8'].includes(member.code)) && member.status === 'Biological').sort((a: Person, b: Person) => a.code.localeCompare(b.code)))
+            setDisplayMembers(members.filter(member => (['0.1', '0.2', '0.3', '0.4', '0.5', '0.6', '0.7', '0.8', '1.1'].includes(member.code)) && member.status === 'Biological').sort(compareDates))
         }
     }, [members, search, isSearch])
 
@@ -37,6 +37,15 @@ export default function Home() {
             .finally(() => {
                 setIsLoading(false)
             })
+    }
+
+    const compareDates = (a: Person, b: Person) => {
+        let dateA = new Date(a.dob)
+        let dateB = new Date(b.dob)
+
+        if (dateA < dateB) return -1
+        if (dateA > dateB) return 1
+        return 0
     }
 
     const toggleSearch = () => {

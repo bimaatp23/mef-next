@@ -13,7 +13,7 @@ interface Props {
 }
 
 export default function DetailBox(props: Props) {
-    const activeColors: Color = props.detail.status === 'Biological' ? colors.green : colors.blue
+    const activeColors: Color = props.detail.status === 'Biological' ? (props.detail.code.startsWith('0') ? colors.green : colors.blue) : (props.detail.code.startsWith('0') ? colors.softGreen : colors.softBlue)
     const [editOpen, setEditOpen] = useState<boolean>(false)
     const [editBio, setEditBio] = useState<DetailPerson>(props.detail)
     const [isDie, setIsDie] = useState<boolean>(!!props.detail.dod)

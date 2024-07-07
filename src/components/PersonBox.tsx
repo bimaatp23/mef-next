@@ -10,8 +10,7 @@ interface Props {
 
 export default function PersonBox(props: Props) {
     const router = useRouter()
-
-    const activeColors: Color = props.member.status === 'Biological' ? colors.green : colors.blue
+    const activeColors: Color = props.member.status === 'Biological' ? (props.member.code.startsWith('0') ? colors.green : colors.blue) : (props.member.code.startsWith('0') ? colors.softGreen : colors.softBlue)
 
     return <Box sx={{ background: activeColors[400], borderRadius: 2, overflow: 'hidden', pl: 1, cursor: 'pointer', mb: 2 }} onClick={() => router.push(`/${props.member.code}`)}>
         <Box sx={{ background: activeColors[950], display: 'flex', gap: 2, alignItems: 'center', height: '70px', paddingX: 1 }}>

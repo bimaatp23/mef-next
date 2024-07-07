@@ -11,54 +11,38 @@ export async function GET(request: NextRequest) {
     const code: string = query.get('code') || ''
     try {
         if (code) {
-            if (code === '0') {
-                const self = await fetchSql(`SELECT ${member.detail} FROM members WHERE code = '${code}'`)
-                const child = await fetchSql(`SELECT ${member.general} FROM members WHERE status = 'Biological' AND code LIKE '%' AND code NOT LIKE '0' AND code NOT LIKE '%.%' ORDER BY code ASC`)
-                const result: DetailResp = {
-                    status: 200,
-                    message: 'OK',
-                    data: {
-                        selfs: (self.rows as DetailPerson[]).map((value) => {
-                            return {
-                                ...value,
-                                dob: moment(value.dob).format('YYYY-MM-DD'),
-                                dod: value.dod ? moment(value.dod).format('YYYY-MM-DD') : null
-                            }
-                        }),
-                        parents: [],
-                        childs: child.rows as Person[]
-                    }
+            const generation = code.toString().split('.')
+            const parentGeneration = generation.slice(0, generation.length - 1)
+            const self = await fetchSql(`SELECT ${member.detail} FROM members WHERE code = '${code}' ORDER BY status ASC`)
+            const parent = await fetchSql(`SELECT ${member.general} FROM members WHERE code = '${parentGeneration.join('.')}' ORDER BY status ASC`)
+            const child = await fetchSql(`SELECT ${member.general} FROM members WHERE status = 'Biological' AND code LIKE '${code}.%' AND code NOT LIKE '${code}.%.%' ORDER BY code ASC`)
+            const result: DetailResp = {
+                status: 200,
+                message: 'OK',
+                data: {
+                    selfs: (self.rows as DetailPerson[]).map((value) => {
+                        return {
+                            ...value,
+                            dob: moment(value.dob).format('YYYY-MM-DD'),
+                            dod: value.dod ? moment(value.dod).format('YYYY-MM-DD') : null
+                        }
+                    }),
+                    parents: parent.rows as DetailPerson[],
+                    childs: child.rows as Person[]
                 }
-                return NextResponse.json(result)
-            } else {
-                const generation = code.toString().split('.')
-                const parentGeneration = generation.slice(0, generation.length - 1)
-                const self = await fetchSql(`SELECT ${member.detail} FROM members WHERE code = '${code}' ORDER BY status ASC`)
-                const parent = await fetchSql(`SELECT ${member.general} FROM members WHERE code = '${generation.length === 1 ? '0' : parentGeneration.join('.')}' ORDER BY status ASC`)
-                const child = await fetchSql(`SELECT ${member.general} FROM members WHERE status = 'Biological' AND code LIKE '${code}.%' AND code NOT LIKE '${code}.%.%' ORDER BY code ASC`)
-                const result: DetailResp = {
-                    status: 200,
-                    message: 'OK',
-                    data: {
-                        selfs: (self.rows as DetailPerson[]).map((value) => {
-                            return {
-                                ...value,
-                                dob: moment(value.dob).format('YYYY-MM-DD'),
-                                dod: value.dod ? moment(value.dod).format('YYYY-MM-DD') : null
-                            }
-                        }),
-                        parents: parent.rows as DetailPerson[],
-                        childs: child.rows as Person[]
-                    }
-                }
-                return NextResponse.json(result)
             }
+            return NextResponse.json(result)
         } else {
             const members = await fetchSql(`SELECT ${member.general} FROM members ORDER BY name ASC`)
             const result: BaseResp = {
                 status: 200,
                 message: 'OK',
-                data: members.rows
+                data: (members.rows as Person[]).map((value) => {
+                    return {
+                        ...value,
+                        dob: moment(value.dob).format('YYYY-MM-DD')
+                    }
+                })
             }
             return NextResponse.json(result)
         }
