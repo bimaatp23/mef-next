@@ -27,8 +27,18 @@ export async function GET(request: NextRequest) {
                             dod: value.dod ? moment(value.dod).format('YYYY-MM-DD') : null
                         }
                     }),
-                    parents: parent.rows as DetailPerson[],
-                    childs: child.rows as Person[]
+                    parents: (parent.rows as Person[]).map((value) => {
+                        return {
+                            ...value,
+                            dob: moment(value.dob).format('YYYY-MM-DD')
+                        }
+                    }),
+                    childs: (child.rows as Person[]).map((value) => {
+                        return {
+                            ...value,
+                            dob: moment(value.dob).format('YYYY-MM-DD')
+                        }
+                    })
                 }
             }
             return NextResponse.json(result)
@@ -80,6 +90,25 @@ export async function PUT(request: NextRequest) {
     const newBio: DetailPerson = await request.json()
     try {
         await fetchSql(`UPDATE members SET name='${newBio.name}', dob='${newBio.dob}', dod=${newBio.dod ? `'${newBio.dod}'` : 'NULL'}, gender='${newBio.gender}', address='${newBio.address}', phone=${newBio.phone ? `'${newBio.phone.trim()}'` : 'NULL'}, status='${newBio.status}' WHERE id='${query.get('id')}'`)
+        const result: BaseResp = {
+            status: 200,
+            message: 'OK'
+        }
+        return NextResponse.json(result)
+    } catch (err) {
+        console.error('Error:', err)
+        const error: BaseResp = {
+            status: 500,
+            message: 'Internal Server Error'
+        }
+        return NextResponse.json(error, { status: 500 })
+    }
+}
+
+export async function DELETE(request: NextRequest) {
+    const query = request.nextUrl.searchParams
+    try {
+        await fetchSql(`DELETE FROM members WHERE code LIKE '${query.get('code')}%'`)
         const result: BaseResp = {
             status: 200,
             message: 'OK'

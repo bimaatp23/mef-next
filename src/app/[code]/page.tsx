@@ -64,7 +64,9 @@ export default function Detail({ params }: { params: Params }) {
 
     const getDetail = async () => {
         setIsLoading(true)
-        await fetch(`/api?code=${params.code}`)
+        await fetch(`/api?code=${params.code}`, {
+            method: 'GET'
+        })
             .then(response => response.json())
             .then(json => {
                 setSelfs(json.data.selfs as DetailPerson[])
@@ -96,6 +98,20 @@ export default function Detail({ params }: { params: Params }) {
         await fetch('/api', {
             method: 'POST',
             body: JSON.stringify(newBio)
+        })
+            .then(response => response.json())
+            .then(json => {
+                if (json.status === 200) getDetail()
+            })
+            .finally(() => {
+                setIsLoading(false)
+            })
+    }
+
+    const doDeleteChild = async (child: Person) => {
+        setIsLoading(true)
+        await fetch(`/api?code=${child.code}`, {
+            method: 'DELETE'
         })
             .then(response => response.json())
             .then(json => {
@@ -449,7 +465,7 @@ export default function Detail({ params }: { params: Params }) {
                     </Box>
                     {addChild()}
                     <Box pb={0.5}>
-                        {childs.map((child) => <PersonBox member={child} key={child.id} />)}
+                        {childs.map((child) => <PersonBox member={child} deleteMember={(member) => doDeleteChild(member)} key={child.id} />)}
                     </Box>
                 </Fragment> : <Fragment></Fragment>}
             </Box>
